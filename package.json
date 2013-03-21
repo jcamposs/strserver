@@ -1,0 +1,11 @@
+{
+  "name": "streaming",
+  "version": "0.0.1",
+  "description": "Netlab streaming server",
+  "dependencies": {
+    "express": "3.x",
+    "amqp": "~0.1.4",
+    "ejs": "~0.8.3"
+  }
+}
+
