@@ -18,15 +18,24 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-
 var server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
 
+io.configure('production', function(){
+  io.enable('browser client minification');
+  io.enable('browser client etag');
+  io.enable('browser client gzip');
+  io.set('log level', 1);
+});
+
+var workspace = io
+  .of('/events/workspace')
+  .on('connection', function (socket) {
+    socket.emit('update', {
+        that: 'only'
+      , '/workspace': 'will get'
+    });
+  });
+
 server.listen(9000);
 
-io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'World' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-});
