@@ -21,6 +21,12 @@ app.configure('development', function(){
 var server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
 
+// General configuration
+io.configure(function (){
+  io.set('authorization', authorize);
+});
+
+// Recommended configuration for production
 io.configure('production', function(){
   io.enable('browser client minification');
   io.enable('browser client etag');
@@ -39,3 +45,23 @@ var workspace = io
 
 server.listen(9000);
 
+function print_headers(headers) {
+console.log("BEGIN HEADERS:");
+  for (var h in headers)
+    console.log(h + ": " + headers[h]);
+console.log("END HEADERS:")
+}
+
+function authorize(handshakeData, callback) {
+  for (var p in handshakeData) {
+    if (p == "headers")
+      print_headers(handshakeData[p]);
+    else if (p == "address")
+      console.log("Client: " + handshakeData[p].address + ":" + handshakeData[p].port);
+    else
+      console.log(p + ": " + handshakeData[p]);
+  }
+
+  //TODO: Check if this user is logged using the cookie set in headers
+  callback(null, true);
+}

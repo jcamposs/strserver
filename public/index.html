@@ -13,6 +13,14 @@
     console.log(data);
     socket.emit('my other event', { my: 'data' });
   });
+
+  socket.on('error', function (reason){
+    console.error('Unable to connect Socket.IO', reason);
+  });
+
+  socket.on('connect', function (){
+    console.info('successfully established a working connection \o/');
+  });
   </script>
 
 </body>
