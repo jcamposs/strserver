@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test sockets</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>My First Heading</h1>
+
+  <script>
+  var socket = io.connect('http://localhost:9000');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+  </script>
+
+</body>
+</html>
