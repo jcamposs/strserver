@@ -41,7 +41,7 @@ io.configure('production', function(){
 });
 
 var workspace = io
-  .of('/events/workspace')
+  .of('/workspace')
   .on('connection', function (socket) {
     socket.emit('update', {
         that: 'only'
