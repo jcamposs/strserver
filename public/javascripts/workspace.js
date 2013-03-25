@@ -30,15 +30,15 @@ var Workspace = (function () {
     var socket = sock;
     var wid = null;
 
-    socket.on('update', function (data) {
-      console.log(data);
-      socket.emit('my other event', { my: 'data' });
-    });
-
-    obj.register = function(workspace_id) {
-      console.log("Register workspace " + workspace_id);
-      wid = workspace_id;
+    obj.joinWorkspace = function(id) {
+      console.log("Registering to workspace " + id);
+      socket.emit('register', { workspace: id});
     }
+
+    socket.on('registered', function (data) {
+      wid = data.workspace;
+      console.log("User registered: " + data.workspace);
+    });
 
     return obj;
   };
@@ -53,14 +53,23 @@ var Workspace = (function () {
    */
   module.connect = function(callback) {
     var socket = io.connect('/workspace');
+    var _cb = function(err, obj) {
+      socket.removeListener('error', errorL);
+      socket.removeListener('connect', connectL);
+      callback(err, obj);
+    };
 
-    socket.on('error', function (reason){
-      callback('Unable to connect with workspace streaming server', null);
-    });
+    /* define some listeners */
+    var connectL = function (){
+      _cb(null, Connection(socket));
+    };
 
-    socket.on('connect', function (){
-      callback(null, Connection(socket));
-    });
+    var errorL = function (reason) {
+      _cb('Unable to connect with workspace streaming server', null);
+    };
+
+    socket.on('error', errorL);
+    socket.on('connect', connectL);
   }
 
   return module;
