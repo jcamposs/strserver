@@ -3,7 +3,8 @@
  */
 
 var express = require('express')
-  , authorize = require('./lib/authorize.js');
+  , authorize = require('./lib/authorize.js')
+  , logger = require('nlogger').logger(module);
 
 var app = express();
 
@@ -43,7 +44,7 @@ io.configure('production', function(){
 var workspace = io
   .of('/workspace')
   .on('connection', function (socket) {
-    console.log("Connected: " + socket.handshake.user.name);
+    logger.info("Connected: " + socket.handshake.user.name);
     socket.emit('update', {
         that: 'only'
       , '/workspace': 'will get'
