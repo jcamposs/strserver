@@ -4,7 +4,8 @@
 
 var express = require('express')
   , authorize = require('./lib/authorize.js')
-  , logger = require('nlogger').logger(module);
+  , logger = require('nlogger').logger(module)
+  , workspace = require('./lib/workspace.js');
 
 var app = express();
 
@@ -41,14 +42,7 @@ io.configure('production', function(){
   io.set('log level', 1);
 });
 
-var workspace = io
-  .of('/workspace')
-  .on('connection', function (socket) {
-    logger.info("Connected: " + socket.handshake.user.name);
-    socket.emit('update', {
-        that: 'only'
-      , '/workspace': 'will get'
-    });
-  });
+/* Attend workspace notifications */
+workspace.attend(io);
 
 server.listen(9000);
