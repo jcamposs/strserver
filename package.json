@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "description": "Netlab streaming server",
   "dependencies": {
-    "express": "3.x",
-    "socket.io": "~0.9.13",
     "amqp": "~0.1.4",
-    "ejs": "~0.8.3"
+    "ejs": "~0.8.3",
+    "express": "3.x",
+    "nlogger": "~0.4.0",
+    "socket.io": "~0.9.13"
   }
 }
 
