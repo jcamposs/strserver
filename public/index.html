@@ -3,24 +3,18 @@
 <head>
   <title>Test sockets</title>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="/javascripts/workspace.js"></script>
 </head>
 <body>
-  <h1>My First Heading</h1>
+  <h1>Workspace tester application</h1>
 
   <script>
-  var socket = io.connect('http://localhost:9000/workspace');
-  socket.on('update', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
-  });
-
-  socket.on('error', function (reason){
-    console.error('Unable to connect Socket.IO', reason);
-  });
-
-  socket.on('connect', function (){
-    console.info('successfully established a working connection \o/');
-  });
+    window.onload = function() {
+      Workspace.connect(function(error, conn) {
+        if (error)
+          console.log(error);
+      })
+    }
   </script>
 
 </body>
