@@ -28,11 +28,17 @@ var Workspace = (function () {
   Connection = function(sock) {
     var obj = {};
     var socket = sock;
+    var wid = null;
 
     socket.on('update', function (data) {
       console.log(data);
       socket.emit('my other event', { my: 'data' });
     });
+
+    obj.register = function(workspace_id) {
+      console.log("Register workspace " + workspace_id);
+      wid = workspace_id;
+    }
 
     return obj;
   };

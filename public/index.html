@@ -13,6 +13,8 @@
       Workspace.connect(function(error, conn) {
         if (error)
           console.log(error);
+        else
+          conn.register(1);
       })
     }
   </script>
