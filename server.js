@@ -9,7 +9,7 @@ var express = require('express')
 
 var app = express();
 
-// Configuration
+/* Configuration */
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.use(express.favicon());
@@ -29,12 +29,12 @@ app.configure('development', function(){
 var server = require('http').createServer(app)
   , io = require('socket.io').listen(server);
 
-// General configuration
+/* General configuration */
 io.configure(function (){
   io.set('authorization', authorize);
 });
 
-// Recommended configuration for production
+/* Recommended configuration for production */
 io.configure('production', function(){
   io.enable('browser client minification');
   io.enable('browser client etag');
