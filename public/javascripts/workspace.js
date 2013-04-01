@@ -81,6 +81,11 @@ var Workspace = (function () {
       socket.emit('register', { workspace: id});
     }
 
+    /**
+     * Send a request to start nodes specified in the array nodes.
+     * If nodes are started, the event "started" is emitted.
+     * Return true if request could be sent.
+     */
     obj.start = function(nodes) {
       if (!wid) {
         console.log("Workspace is not registered");
@@ -91,6 +96,11 @@ var Workspace = (function () {
       return true;
     }
 
+    /**
+     * Send a request to stop nodes specified in the array nodes.
+     * If nodes are stopped, the event "stopped" is emitted.
+     * Return true if request could be sent.
+     */
     obj.stop = function(nodes) {
       if (!wid) {
         console.log("Workspace is not registered");
@@ -101,6 +111,11 @@ var Workspace = (function () {
       return true;
     }
 
+    /**
+     * Send a request to connect this user with a node.
+     * If the shell is started, the event "shell connected" is emitted.
+     * Return true if request could be sent.
+     */
     obj.connectShell = function(node) {
       if (!wid) {
         console.log("Workspace is not registered");
@@ -111,6 +126,11 @@ var Workspace = (function () {
       return true;
     }
 
+    /**
+     * Send a request to disconnect this user from a node.
+     * If the shell is stopped, the event "shell disconnected" is emitted.
+     * Return true if request could be sent.
+     */
     obj.disconnectShell = function(node) {
       if (!wid) {
         console.log("Workspace is not registered");
