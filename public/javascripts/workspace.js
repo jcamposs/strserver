@@ -24,22 +24,13 @@ var Workspace = (function () {
 
   var socket = null;
 
-  EventEmitter = function() {
+  EventEmitter = function(isValid) {
     var obj = {};
     var events = {};
-
-    function isValid(evt) {
-      switch (evt) {
-      case "joined":
-        return true;
-      default:
-        console.log("Invalid event " + evt);
-        return false;
-      }
-    }
+    var func = (isValid != null) ? isValid : function(evt) { return false };
 
     obj.on = function(evt, handler) {
-      if (!isValid(evt))
+      if (!func(evt))
         return;
 
       if (!events[evt])
@@ -73,7 +64,17 @@ var Workspace = (function () {
    * Workspace connection object
    */
   Connection = function() {
-    var obj = EventEmitter();
+    function isValid(evt) {
+      switch (evt) {
+      case "joined":
+        return true;
+      default:
+        console.log("Invalid event " + evt);
+        return false;
+      }
+    }
+
+    var obj = EventEmitter(isValid);
     var wid = null;
 
     obj.joinWorkspace = function(id) {
