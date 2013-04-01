@@ -4,20 +4,17 @@
   <title>Test sockets</title>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/javascripts/workspace.js"></script>
+  <script src="/javascripts/test_client.js"></script>
 </head>
 <body>
   <h1>Workspace tester application</h1>
-
-  <script>
-    window.onload = function() {
-      Workspace.connect(function(error, conn) {
-        if (error)
-          console.log(error);
-        else
-          conn.joinWorkspace(1);
-      })
-    }
-  </script>
-
+  <div id = "controller">
+    <div id="screen">
+      <textarea id = "events" rows="30" cols="80" readonly></textarea>
+    <div>
+    <div id="panel">
+      <button id= "connect" type="button" disabled>Connect</button>
+    <div>
+  </div>
 </body>
 </html>
