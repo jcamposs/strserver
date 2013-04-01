@@ -22,22 +22,69 @@
  */
 var Workspace = (function () {
 
+  var socket = null;
+
+  EventEmitter = function() {
+    var obj = {};
+    var events = {};
+
+    function isValid(evt) {
+      switch (evt) {
+      case "joined":
+        return true;
+      default:
+        console.log("Invalid event " + evt);
+        return false;
+      }
+    }
+
+    obj.on = function(evt, handler) {
+      if (!isValid(evt))
+        return;
+
+      if (!events[evt])
+        events[evt] = [];
+
+      events[evt].push(handler);
+    }
+
+    obj.emit = function() {
+      if (arguments.length <= 0)
+        return;
+
+      var evt = arguments[0];
+
+      if (!events[evt])
+        return;
+
+      var args = [];
+
+      for (var i = 1; i < arguments.length; i++)
+        args.push(arguments[i]);
+
+      for (var i = 0; i < events[evt].length; i++)
+        events[evt][i].apply(this, args);
+    }
+
+    return obj;
+  }
+
   /**
    * Workspace connection object
    */
-  Connection = function(sock) {
-    var obj = {};
-    var socket = sock;
+  Connection = function() {
+    var obj = EventEmitter();
     var wid = null;
 
     obj.joinWorkspace = function(id) {
-      console.log("Registering to workspace " + id);
       socket.emit('register', { workspace: id});
     }
 
-    socket.on('registered', function (data) {
-      wid = data.workspace;
-      console.log("User registered: " + data.workspace);
+    socket.on('registered', function (err, data) {
+      if (!err)
+        wid = data.workspace;
+
+      obj.emit("joined", err, data);
     });
 
     return obj;
@@ -52,7 +99,7 @@ var Workspace = (function () {
    * successful.
    */
   module.connect = function(callback) {
-    var socket = io.connect('/workspace');
+    socket = io.connect('/workspace');
     var _cb = function(err, obj) {
       socket.removeListener('error', errorL);
       socket.removeListener('connect', connectL);

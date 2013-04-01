@@ -27,7 +27,14 @@ function connect() {
     else {
       println("State: Connected");
       connection = conn;
-      conn.joinWorkspace(1);
+      connection.on("joined", function(err, data){
+        if (err)
+          println("Error: " + err);
+        else
+          println("Registered in workspace " + data["workspace"]);
+      });
+      println("Registering...");
+      connection.joinWorkspace(1);
     }
   });
 }
