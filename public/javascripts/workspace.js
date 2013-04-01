@@ -81,6 +81,46 @@ var Workspace = (function () {
       socket.emit('register', { workspace: id});
     }
 
+    obj.start = function(nodes) {
+      if (!wid) {
+        console.log("Workspace is not registered");
+        return false;
+      }
+
+      socket.emit('start', { workspace: wid, nodes: nodes });
+      return true;
+    }
+
+    obj.stop = function(nodes) {
+      if (!wid) {
+        console.log("Workspace is not registered");
+        return false;
+      }
+
+      socket.emit('stop', { workspace: wid, nodes: nodes });
+      return true;
+    }
+
+    obj.connectShell = function(node) {
+      if (!wid) {
+        console.log("Workspace is not registered");
+        return false;
+      }
+
+      socket.emit('shell connect', { workspace: wid, node: node });
+      return true;
+    }
+
+    obj.disconnectShell = function(node) {
+      if (!wid) {
+        console.log("Workspace is not registered");
+        return false;
+      }
+
+      socket.emit('shell disconnect', { workspace: wid, node: node });
+      return true;
+    }
+
     socket.on('registered', function (err, data) {
       if (!err)
         wid = data.workspace;
