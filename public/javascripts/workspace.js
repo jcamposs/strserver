@@ -62,11 +62,20 @@ var Workspace = (function () {
 
   /**
    * Workspace connection object
+   * Events emiited:
+   *  - joined
+   *    Fired when joinWorkspace is successful
+   *  - disconnected
+   *    Fired when the streaming connection with the server is closed
+   *  - connected
+   *    When a connection with the server is re-established
    */
   Connection = function() {
     function isValid(evt) {
       switch (evt) {
       case "joined":
+      case "connected":
+      case "disconnected":
         return true;
       default:
         console.log("Invalid event " + evt);
@@ -140,6 +149,19 @@ var Workspace = (function () {
       socket.emit('shell disconnect', { workspace: wid, node: node });
       return true;
     }
+
+    // Listen for events in the socket
+    socket.on('connect', function () {
+      obj.emit("connected");
+    });
+
+    socket.on('error', function () {
+      console.log("Unexpected errror happened");
+    });
+
+    socket.on('disconnect', function () {
+      obj.emit("disconnected");
+    });
 
     socket.on('registered', function (err, data) {
       if (!err)
