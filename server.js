@@ -5,6 +5,7 @@
 var authorize = require('./lib/authorize.js')
   , express = require('express')
   , logger = require('nlogger').logger(module)
+  , messages = require('./lib/messages.js')
   , nimble = require('nimble')
   , workspace = require('./lib/workspace.js');
 
@@ -15,8 +16,13 @@ var app = null
 /* Server initialization */
 nimble.series([
   function(_callback) {
-    // TODO: Init amqp
-    _callback();
+    /* Configure messaging system */
+    messages.connect(function(err) {
+      if (err)
+        logger.error(err);
+      else
+        _callback()
+    });
   },
   function(_callback) {
     /* Configuration for the application */
