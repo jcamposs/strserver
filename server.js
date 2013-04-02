@@ -2,47 +2,71 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , authorize = require('./lib/authorize.js')
+var authorize = require('./lib/authorize.js')
+  , express = require('express')
   , logger = require('nlogger').logger(module)
+  , nimble = require('nimble')
   , workspace = require('./lib/workspace.js');
 
-var app = express();
+var app = null
+  , server = null
+  , io = null
 
-/* Configuration */
-app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.static(__dirname + '/public'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser('your secret here'));
-  app.use(express.session());
-  app.use(app.router);
+/* Server initialization */
+nimble.series([
+  function(_callback) {
+    // TODO: Init amqp
+    _callback();
+  },
+  function(_callback) {
+    /* Configuration for the application */
+    app = express();
+
+    app.configure(function(){
+      app.set('views', __dirname + '/views');
+      app.use(express.favicon());
+      app.use(express.logger('dev'));
+      app.use(express.static(__dirname + '/public'));
+      app.use(express.bodyParser());
+      app.use(express.methodOverride());
+      app.use(express.cookieParser('your secret here'));
+      app.use(express.session());
+      app.use(app.router);
+    });
+
+    app.configure('development', function(){
+      app.use(express.errorHandler());
+    });
+
+    _callback();
+  },
+  function(_callback) {
+    /* SocketIO server configuration */
+    server = require('http').createServer(app);
+    io = require('socket.io').listen(server);
+
+    /* General configuration */
+    io.configure(function (){
+      io.set('authorization', authorize);
+    });
+
+    /* Recommended configuration for production */
+    io.configure('production', function(){
+      io.enable('browser client minification');
+      io.enable('browser client etag');
+      io.enable('browser client gzip');
+      io.set('log level', 1);
+    });
+
+    _callback();
+  },
+  function(_callback) {
+    /* Attend workspace notifications */
+    workspace.attend(io);
+
+    _callback();
+  }
+], function() {
+  /* Everithing is configured */
+  server.listen(9000);
 });
-
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
-
-var server = require('http').createServer(app)
-  , io = require('socket.io').listen(server);
-
-/* General configuration */
-io.configure(function (){
-  io.set('authorization', authorize);
-});
-
-/* Recommended configuration for production */
-io.configure('production', function(){
-  io.enable('browser client minification');
-  io.enable('browser client etag');
-  io.enable('browser client gzip');
-  io.set('log level', 1);
-});
-
-/* Attend workspace notifications */
-workspace.attend(io);
-
-server.listen(9000);
