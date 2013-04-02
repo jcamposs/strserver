@@ -5,6 +5,10 @@ var start = null;
 var stop = null;
 var connection = null;
 
+/* Testing parameters */
+var workspace_id = 1;
+var nodes = ["pc0", "s0", "pc1"];
+
 window.onload = function() {
   button = document.getElementById('connect');
   events = document.getElementById('events');
@@ -30,22 +34,37 @@ function connect() {
       println("Error: " + error);
     else {
       connection = conn;
-      println("State: Connected");
+      println("Connected");
       enablePannel();
-      connection.on("joined", function(err, data){
-        if (err)
-          println("Error: " + err);
-        else
-          println("Registered in workspace " + data["workspace"]);
-      });
+      addListeners();
       println("Registering...");
-      connection.joinWorkspace(1);
+      connection.joinWorkspace(workspace_id);
     }
   });
 }
 
 function println(str) {
   events.value += str + "\n";
+}
+
+function addListeners() {
+  /* Joined is emitted when we are registered for workspace events */
+  connection.on("joined", function(err, data){
+    if (err)
+      println("Error: " + err);
+    else
+      println("Registered in workspace " + data["workspace"]);
+  });
+
+  /* We want to know when the streaming connection is closed */
+  connection.on("disconnected", function(){
+    println("Server disconnected");
+  });
+
+  /* We want to know when the streaming connection is reconnected */
+  connection.on("connected", function(){
+    println("Server reconnected");
+  });
 }
 
 function enablePannel() {
@@ -58,12 +77,10 @@ function enablePannel() {
 
 //Start machines
 function startNodes() {
-  var nodes = ["pc0", "s0", "pc1"];
   connection.start(nodes);
 }
 
 //Stop machines
 function stopNodes() {
-  var nodes = ["pc0", "pc1"];
   connection.stop(nodes);
 }
