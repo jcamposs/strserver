@@ -69,7 +69,7 @@ nimble.series([
   },
   function(_callback) {
     /* Attend workspace notifications */
-    workspace.attend(io);
+    workspace.attend(io, messenger);
 
     _callback();
   }
