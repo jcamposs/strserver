@@ -22,7 +22,7 @@ nimble.series([
       if (err)
         logger.error(err);
       else
-        _callback()
+        _callback();
     });
   },
   function(_callback) {
