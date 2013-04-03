@@ -69,6 +69,8 @@ var Workspace = (function () {
    *    Fired when the streaming connection with the server is closed
    *  - connected
    *    When a connection with the server is re-established
+   *  - updated
+   *    Emitted when there are a new list of nodes with a new state
    */
   Connection = function() {
     function isValid(evt) {
@@ -76,6 +78,7 @@ var Workspace = (function () {
       case "joined":
       case "connected":
       case "disconnected":
+      case "updated":
         return true;
       default:
         console.log("Invalid event " + evt);
@@ -168,6 +171,10 @@ var Workspace = (function () {
         wid = data.workspace;
 
       obj.emit("joined", err, data);
+    });
+
+    socket.on('updated', function (data) {
+      obj.emit("updated", data);
     });
 
     return obj;

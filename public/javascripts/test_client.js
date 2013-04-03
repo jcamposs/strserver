@@ -65,6 +65,11 @@ function addListeners() {
   connection.on("connected", function(){
     println("Server reconnected");
   });
+
+  /* We want to get state updates */
+  connection.on("updated", function(data){
+    println("Updated: " + JSON.stringify(data));
+  });
 }
 
 function enablePannel() {
