@@ -64,6 +64,8 @@ function addListeners() {
   /* We want to know when the streaming connection is reconnected */
   connection.on("connected", function(){
     println("Server reconnected");
+
+    connection.joinWorkspace(workspace_id);
   });
 
   /* We want to get state updates */
