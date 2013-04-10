@@ -97,6 +97,7 @@ function enablePannel() {
   stop = document.getElementById('stop');
   start.onclick = startNodes;
   stop.onclick = stopNodes;
+  shell_connect_b.onclick = connect_shell;
 }
 
 //Start machines
@@ -107,4 +108,9 @@ function startNodes() {
 //Stop machines
 function stopNodes() {
   connection.stop(nodes);
+}
+
+//Connect shellinabox terminal
+function connect_shell() {
+  connection.connectShell(nodes[0]);
 }
