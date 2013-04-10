@@ -6,6 +6,7 @@ var pannel = null;
 var start = null;
 var stop = null;
 var connection = null;
+var connected = false;
 
 /* Testing parameters */
 var workspace_id = 1;
@@ -38,6 +39,7 @@ function connect() {
       println("Error: " + error);
     else {
       connection = conn;
+      connected = true;
       println("Connected");
       enablePannel();
       addListeners();
@@ -63,12 +65,13 @@ function addListeners() {
   /* We want to know when the streaming connection is closed */
   connection.on("disconnected", function(){
     println("Server disconnected");
+    connected = false;
   });
 
   /* We want to know when the streaming connection is reconnected */
   connection.on("connected", function(){
     println("Server reconnected");
-
+    connected = true;
     connection.joinWorkspace(workspace_id);
   });
 
@@ -102,15 +105,24 @@ function enablePannel() {
 
 //Start machines
 function startNodes() {
-  connection.start(nodes);
+  if (!connected)
+    alert("Server disconnected");
+  else
+    connection.start(nodes);
 }
 
 //Stop machines
 function stopNodes() {
-  connection.stop(nodes);
+  if (!connected)
+    alert("Server disconnected");
+  else
+    connection.stop(nodes);
 }
 
 //Connect shellinabox terminal
 function connect_shell() {
-  connection.connectShell(nodes[0]);
+  if (!connected)
+    alert("Server disconnected");
+  else
+    connection.connectShell(nodes[0]);
 }
