@@ -1,4 +1,6 @@
-var button = null;
+var connect_b = null;
+var shell_connect_b = null;
+var shell_disconnect_b = null;
 var events = null;
 var pannel = null;
 var start = null;
@@ -10,15 +12,17 @@ var workspace_id = 1;
 var nodes = ["pc0"];
 
 window.onload = function() {
-  button = document.getElementById('connect');
+  connect_b = document.getElementById('connect');
+  shell_connect_b = document.getElementById('shellconnect');
+  shell_disconnect_b = document.getElementById('shelldisconnect');
   events = document.getElementById('events');
   pannel = document.getElementById('pannel');
 
   println("Disconnected");
 
   // Enable button so that we can connect the socket
-  button.disabled = false;
-  button.onclick = connect;
+  connect_b.disabled = false;
+  connect_b.onclick = connect;
 }
 
 function connect() {
@@ -71,7 +75,20 @@ function addListeners() {
   /* We want to get state updates */
   connection.on("updated", function(data){
     println("Updated: " + JSON.stringify(data));
+    updateShellConnectButton(nodes[0], data.nodes);
   });
+}
+
+function updateShellConnectButton(node, nodes) {
+  for(var i = 0; i < nodes.length; i++) {
+    if (nodes[i].name == node) {
+      if (nodes[i].state == "halted") {
+        shell_connect_b.disabled = true;
+      } else if (nodes[i].state == "started") {
+        shell_connect_b.disabled = false;
+      }
+    }
+  }
 }
 
 function enablePannel() {
