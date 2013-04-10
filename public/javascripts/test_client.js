@@ -7,7 +7,7 @@ var connection = null;
 
 /* Testing parameters */
 var workspace_id = 1;
-var nodes = ["pc0", "s0", "pc1"];
+var nodes = ["pc0"];
 
 window.onload = function() {
   button = document.getElementById('connect');
