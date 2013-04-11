@@ -84,6 +84,16 @@ function addListeners() {
   /* We want to get shellinabox notifications */
   connection.on("shell", function(data){
     println("Shell: " + JSON.stringify(data));
+    if (data.node != nodes[0])
+      return;
+
+    if (data.state == "connected") {
+      shell_connect_b.disabled = true;
+      shell_disconnect_b.disabled = false;
+    } else {
+      shell_connect_b.disabled = false;
+      shell_disconnect_b.disabled = true;
+    }
   });
 }
 
@@ -106,6 +116,7 @@ function enablePannel() {
   start.onclick = startNodes;
   stop.onclick = stopNodes;
   shell_connect_b.onclick = connect_shell;
+  shell_disconnect_b.onclick = disconnect_shell;
 }
 
 //Start machines
@@ -130,4 +141,9 @@ function connect_shell() {
     alert("Server disconnected");
   else
     connection.connectShell(nodes[0]);
+}
+
+//Disconnect shellinabox terminal
+function disconnect_shell() {
+  //TODO:
 }
