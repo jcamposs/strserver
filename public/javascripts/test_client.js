@@ -145,5 +145,8 @@ function connect_shell() {
 
 //Disconnect shellinabox terminal
 function disconnect_shell() {
-  //TODO:
+  if (!connected)
+    alert("Server disconnected");
+  else
+    connection.disconnectShell(nodes[0]);
 }
