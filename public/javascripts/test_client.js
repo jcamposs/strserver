@@ -80,6 +80,11 @@ function addListeners() {
     println("Updated: " + JSON.stringify(data));
     updateShellConnectButton(nodes[0], data.nodes);
   });
+
+  /* We want to get shellinabox notifications */
+  connection.on("shell", function(data){
+    println("Shell: " + JSON.stringify(data));
+  });
 }
 
 function updateShellConnectButton(node, nodes) {

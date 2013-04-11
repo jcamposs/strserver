@@ -71,6 +71,8 @@ var Workspace = (function () {
    *    When a connection with the server is re-established
    *  - updated
    *    Emitted when there are a new list of nodes with a new state
+   *  - shell
+   *    Emitted when shell connection change its state
    */
   Connection = function() {
     function isValid(evt) {
@@ -79,6 +81,7 @@ var Workspace = (function () {
       case "connected":
       case "disconnected":
       case "updated":
+      case "shell":
         return true;
       default:
         console.log("Invalid event " + evt);
@@ -177,6 +180,9 @@ var Workspace = (function () {
       obj.emit("updated", data);
     });
 
+    socket.on('shell', function (data) {
+      obj.emit("shell", data);
+    });
     return obj;
   };
 
