@@ -6,6 +6,7 @@
     "amqp": "~0.1.4",
     "ejs": "~0.8.3",
     "express": "3.x",
+    "konphyg": "~1.2.0",
     "nimble": "~0.0.2",
     "nlogger": "~0.4.0",
     "socket.io": "~0.9.13"
