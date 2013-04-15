@@ -5,7 +5,7 @@
 var authorize = require('./lib/authorize.js')
   , express = require('express')
   , logger = require('nlogger').logger(module)
-  , Messenger = require('./lib/messenger.js')
+  , msg = require('./lib/messenger.js')
   , nimble = require('nimble')
   , workspace = require('./lib/workspace.js');
 
@@ -18,7 +18,8 @@ var app = null
 nimble.series([
   function(_callback) {
     /* Configure messaging system */
-    messenger = new Messenger(function(err) {
+    msg.create(function(err, msg) {
+      messenger = msg;
       if (err)
         logger.error(err);
       else
