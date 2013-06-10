@@ -69,6 +69,8 @@ nimble.series([
     _callback();
   },
   function(_callback) {
+    /* Add name space handler here*/
+
     /* Attend workspace notifications */
     workspace.attend(io, messenger);
 
