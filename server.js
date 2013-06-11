@@ -13,6 +13,8 @@ var app = null
   , messenger = null
   , server = null
   , io = null
+  , port = 9000
+  , hostname = "localhost"
 
 /* Server initialization */
 nimble.series([
@@ -78,5 +80,5 @@ nimble.series([
   }
 ], function() {
   /* Everithing is configured */
-  server.listen(9000);
+  server.listen(port, hostname);
 });
